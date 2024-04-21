@@ -16,4 +16,4 @@ export const formattedDate = (timestamp) => {
     return formattedDate
 }
 
-console.log(formattedDate(1803376500))
+// console.log(formattedDate(1803376500))

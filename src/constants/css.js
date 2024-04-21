@@ -17,7 +17,7 @@ export const fontSet = {
         small: { fontSize: 12, fontWeight: 500 },
         h1Bold: { fontSize: 26, fontWeight: 700 },
         h1Light: { fontSize: 26, fontWeight: 500 },
-        h2Bold: { fontSize: 24, fontWeight: 500 },
+        h2Bold: { fontSize: 24, fontWeight: 700 },
         h2Light: { fontSize: 24, fontWeight: 500 },
         h3Bold: { fontSize: 22, fontWeight: 700 },
         h3Light: { fontSize: 22, fontWeight: 500 },
@@ -57,10 +57,6 @@ export const justifyBetween = { flexDirection: 'row', justifyContent: 'space-bet
 export const justifyAround = { flexDirection: 'row', justifyContent: 'space-around' }
 export const itemsCenter = { flexDirection: 'row', alignItems: 'center' }
 export const centercenter = { justifyContent: 'center', alignItems: 'center' }
-
-
-export const background = { flex: 1, backgroundColor: colorSet.timeTracker.black, paddingTop: 40, ...padding.lg }
-
 export const avatar = {
     lg: { width: 60, height: 60, borderRadius: 9999 },
     md: { width: 50, height: 50, borderRadius: 9999 },
@@ -72,3 +68,7 @@ export const rounded = {
     md: { borderRadius: 8 },
     lg: { borderRadius: 12 },
 }
+
+export const background = { flex: 1, backgroundColor: colorSet.timeTracker.black, paddingTop: 40, ...padding.lg }
+export const backgroundBlackWidget = { ...padding.md, marginVertical: 10, ...rounded.sm, backgroundColor: colorSet.timeTracker.dark, flexDirection: 'row' }
+

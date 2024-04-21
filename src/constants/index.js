@@ -2,6 +2,7 @@
 export * from './colorSet';
 export * from './background';
 export * from './colorSet/timeTracker';
+export * from './backgroundBlackWidget';
 export * from './fontSet';
 export * from './margin';
 export * from './padding';

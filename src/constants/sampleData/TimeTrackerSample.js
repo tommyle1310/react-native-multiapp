@@ -24,3 +24,18 @@ export const activitiesHomeScreen = [
         isOnProgress: false
     },
 ]
+
+export const activitiesTaskScreen = [
+    {
+        id: 1,
+        name: 'UI Design',
+        duration: '00:32:10',
+        tags: ['Work', 'Project'],
+    },
+    {
+        id: 2,
+        name: '100x Pushups',
+        duration: '02:22:10',
+        tags: ['Personal', 'Workout'],
+    },
+]

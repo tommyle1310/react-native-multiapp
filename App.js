@@ -1,10 +1,16 @@
 import { View, Text } from 'react-native'
 import React from 'react'
-import Navigation from './src/Navigation'
+import Navigation from './src/Navigation/Navigation'
+import { store } from './src/store/store'
+import { Provider } from 'react-redux'
+import 'react-native-gesture-handler'
+
 
 const App = () => {
   return (
-    <Navigation />
+    <Provider store={store}>
+      <Navigation />
+    </Provider>
   )
 }
 

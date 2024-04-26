@@ -39,3 +39,23 @@ export const activitiesTaskScreen = [
         tags: ['Personal', 'Workout'],
     },
 ]
+
+
+export const timeTracker = {
+    activities: {
+        name: 'Time tracking project',
+        timestamps: [
+            {
+                isPaused: true,
+                timestamp: 12233333,
+                totalResumeMiliSeconds: 16600
+            },
+            {
+                isPaused: false,
+                timestamp: 12333333,
+                totalResumeMiliSeconds: 12000
+            },
+        ]
+    }
+
+} 

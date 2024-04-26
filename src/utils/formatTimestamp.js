@@ -16,4 +16,26 @@ export const formattedDate = (timestamp) => {
     return formattedDate
 }
 
-// console.log(formattedDate(1803376500))
+export const convertTimestamp = (timestamp) => {
+    let seconds = timestamp % 60;
+    let minutes = Math.floor((timestamp / 60) % 60);
+    let hours = Math.floor((timestamp / (60 * 60)) % 24);
+    let days = Math.floor(timestamp / (24 * 60 * 60));
+
+    // Approximating years and months
+    let years = Math.floor(days / 365.25);
+    let months = Math.floor((days % 365.25) / 30.4375);
+
+    return {
+        "years": years,
+        "months": months,
+        "days": days,
+        "hours": hours,
+        "minutes": minutes,
+        "seconds": seconds
+    };
+}
+
+export const convertIsoDateTimeToAppTime = (time) => {
+    return formattedDate(Math.floor(new Date(time).getTime() / 1000));
+}

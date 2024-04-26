@@ -3,7 +3,7 @@ import React from 'react'
 import * as CSS from '../../constants/css';
 import { Ionicons, Entypo, FontAwesome6, MaterialIcons, FontAwesome, FontAwesome5, AntDesign } from '@expo/vector-icons';
 import ActivityTaskCardList from '../../components/TimeTracker/ActivityTaskCardList';
-import { activitiesTaskScreen } from '../../constants/sampleData/TimeTrackerSample';
+import { activitiesTaskScreen, timeTracker } from '../../constants/sampleData/TimeTrackerSample';
 import { useNavigation } from '@react-navigation/native';
 const { colorSet, fontSet, backgroundBlackWidget, margin, padding, justifyCenter, background, justifyBetween, justifyAround, itemsCenter, centercenter, avatar, rounded } = CSS;
 
@@ -16,7 +16,7 @@ const TasksScreen = () => {
                 { ...backgroundBlackWidget, ...justifyBetween, ...itemsCenter },
                 pressed && { opacity: 0.8 }
             ]}
-                onPress={() => navigation.navigate('DetailActivity')}
+                onPress={() => navigation.navigate('DetailActivity', { activityDetail: timeTracker.activities })}
             >
                 <View style={{ gap: 10 }}>
                     <Text style={{ color: 'white', ...fontSet.timeTracker.h2Bold }}>00:32:10</Text>

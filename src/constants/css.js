@@ -8,6 +8,13 @@ export const colorSet = {
         softPurple: '#3c1a9f',
         dark: '#1b232e',
         white: '#f1f0fb'
+    },
+    auth: {
+        background: '#201a30',
+        primary: '#0df5e3',
+        dark: '#1e2438',
+        white: '#ffffff',
+        gray: '#817e8b'
     }
 }
 

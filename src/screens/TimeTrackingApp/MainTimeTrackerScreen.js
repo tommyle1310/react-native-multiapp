@@ -1,5 +1,5 @@
 import { View, Text, Pressable, StyleSheet } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import * as CSS from '../../constants/css';
 import { Ionicons, Entypo, FontAwesome6, MaterialIcons, FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import Tab from '../../components/TimeTracker/Tab';
@@ -7,13 +7,48 @@ import ActivityCardList from '../../components/TimeTracker/ActivityCardList';
 import { activitiesHomeScreen } from '../../constants/sampleData/TimeTrackerSample';
 import TasksScreen from './TasksScreen';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native'
+import { getActivities } from '../../store/features/TimeTracker/activitySlice';
+
 
 const { colorSet, fontSet, backgroundBlackWidget, margin, padding, justifyCenter, background, justifyBetween, justifyAround, itemsCenter, centercenter, avatar, rounded } = CSS;
 
 const MainTimeTrackingScreen = () => {
     const navigation = useNavigation()
     const [selectTabIndex, setSelectTabIndex] = useState(0)
+    const dispatch = useDispatch()
+    const activitiesList = useSelector(state => state.activity)
+    const [listActivities, setListActivities] = useState([])
 
+    useEffect(() => {
+        setListActivities(activitiesList)
+    }, [activitiesList])
+
+    useFocusEffect(
+        React.useCallback(() => {
+            // Define an async function
+            const fetchData = async () => {
+                try {
+                    // Your logic here, it will run when the screen is focused
+                    // Get token from AsyncStorage
+                    await dispatch(getActivities())
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                }
+            };
+
+            // Call the async function immediately
+            fetchData();
+
+            // Return a cleanup function
+            return () => {
+                // Cleanup logic if needed
+                console.log('Screen is unfocused');
+            };
+        }, [])
+    );
 
     return (
         <View style={background}>
@@ -21,7 +56,9 @@ const MainTimeTrackingScreen = () => {
                 <Pressable style={({ pressed }) => [
                     styles.avatar,
                     pressed && { opacity: 0.8 }
-                ]}></Pressable>
+                ]}
+                    onPress={() => navigation.openDrawer()}
+                ></Pressable>
                 <Text style={{ ...fontSet.timeTracker.h3Bold, color: colorSet.timeTracker.white, }}>Activity</Text>
                 <Pressable onPress={() => navigation.navigate('StatisticsTimeTracking')} style={{ borderWidth: 1, borderColor: colorSet.timeTracker.white, ...rounded.md, ...padding.sm }}><Ionicons name="stats-chart-outline" size={24} color={colorSet.timeTracker.white} /></Pressable>
             </View>
@@ -34,7 +71,7 @@ const MainTimeTrackingScreen = () => {
                             style={({ pressed }) => [{ ...backgroundBlackWidget, gap: 10, borderWidth: 1, borderColor: colorSet.timeTracker.softGray },
                             pressed && { backgroundColor: colorSet.timeTracker.softGray }
                             ]}><Entypo name="plus" size={24} color={colorSet.timeTracker.white} /><Text style={{ color: colorSet.timeTracker.white, ...fontSet.timeTracker.h5Light }}>Add new activity</Text></Pressable>
-                        <ActivityCardList activities={activitiesHomeScreen} />
+                        <ActivityCardList activities={listActivities} />
                     </>
                     : <TasksScreen />
             }

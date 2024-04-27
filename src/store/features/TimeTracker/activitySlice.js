@@ -37,7 +37,6 @@ export const getActivities = () => async (dispatch) => {
     try {
         const currentUserId = await AsyncStorage.getItem('userId');
         const response = await axios.get(`/activity?userId=${currentUserId}`);
-        // console.log('res:', response.data.data);
         dispatch(getActivitiesReducer(response.data.data)); // Dispatch success action with activities data
     } catch (error) {
         console.log(error.message);

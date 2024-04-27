@@ -21,7 +21,7 @@ const ActivityCardList = ({ activities }) => {
                         style={({ pressed }) => [
                             pressed && { opacity: .7 }
                         ]}
-                        onPressOut={() => navigation.navigate('DetailTimeTracking')}
+                        onPressOut={() => navigation.navigate('DetailTimeTracking', { activity: item })}
                     >
                         <LinearGradient
                             colors={!item.isPaused ? [colorSet.timeTracker.cyan, colorSet.timeTracker.violet] : [colorSet.timeTracker.dark, colorSet.timeTracker.dark]} // Array of colors for the gradient

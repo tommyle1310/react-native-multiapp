@@ -8,7 +8,7 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { getActivities } from '../../store/features/TimeTracker/activitySlice';
 import { useDispatch, useSelector } from 'react-redux';
 import useGetActivities from '../../hooks/TimeTracker/useGetActivities';
-import { convertTotalTimestampDurationToAppTime, convertTotalTimestampDurationToAppTimeToTimestamp } from '../../utils/formatTimestamp';
+import { convertListTotalTimestampDurationToAppTime, convertListTotalTimestampDurationToAppTimeToTimestamp } from '../../utils/formatTimestamp';
 const { colorSet, fontSet, backgroundBlackWidget, margin, padding, justifyCenter, background, justifyBetween, justifyAround, itemsCenter, centercenter, avatar, rounded } = CSS;
 
 
@@ -36,13 +36,13 @@ const TasksScreen = () => {
                         pressed && { opacity: 0.8 }
                     ]}
                         key={item._id}
-                        onPress={() => navigation.navigate('DetailActivity', { totalDuration: convertTotalTimestampDurationToAppTimeToTimestamp(convertTotalTimestampDurationToAppTime(item.timestamps.map(item => item.timestamp))), activityId: item._id })}
+                        onPress={() => navigation.navigate('DetailActivity', { totalDuration: convertListTotalTimestampDurationToAppTimeToTimestamp(convertListTotalTimestampDurationToAppTime(item.timestamps.map(item => item.timestamp))), activityId: item._id })}
                     >
                         {/* {console.log(timeTracker.activities)} */}
-                        {/* {console.log(convertTotalTimestampDurationToAppTimeToTimestamp(convertTotalTimestampDurationToAppTime(item.timestamps.map(item => item.timestamp))))} */}
+                        {/* {console.log(convertListTotalTimestampDurationToAppTimeToTimestamp(convertListTotalTimestampDurationToAppTime(item.timestamps.map(item => item.timestamp))))} */}
                         <View style={{ gap: 10 }}>
                             {/* {console.log('item', item.timestamps.map(item => item.timestamp))} */}
-                            <Text style={{ color: 'white', ...fontSet.timeTracker.h2Bold }}>{convertTotalTimestampDurationToAppTime(item.timestamps.map(item => item.timestamp))}</Text>
+                            <Text style={{ color: 'white', ...fontSet.timeTracker.h2Bold }}>{convertListTotalTimestampDurationToAppTime(item.timestamps.map(item => item.timestamp))}</Text>
                             <View style={{ ...itemsCenter, gap: 10 }}>
                                 <AntDesign name="loading1" size={18} color={colorSet.timeTracker.violet} />
                                 <Text style={{ color: 'white' }}>{item.name}</Text>

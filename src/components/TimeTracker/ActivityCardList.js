@@ -24,7 +24,7 @@ const ActivityCardList = ({ activities }) => {
                         onPressOut={() => navigation.navigate('DetailTimeTracking')}
                     >
                         <LinearGradient
-                            colors={item.isPaused ? [colorSet.timeTracker.cyan, colorSet.timeTracker.violet] : [colorSet.timeTracker.dark, colorSet.timeTracker.dark]} // Array of colors for the gradient
+                            colors={!item.isPaused ? [colorSet.timeTracker.cyan, colorSet.timeTracker.violet] : [colorSet.timeTracker.dark, colorSet.timeTracker.dark]} // Array of colors for the gradient
                             start={{ x: 0, y: 0 }} // Start point of the gradient (0, 0) is top left, (1, 1) is bottom right
                             end={{ x: 1, y: 0 }} // End point of the gradient
                             style={{ width: '100%', height: 100, ...rounded.md, flexDirection: 'row', position: 'relative' }} // Style for the gradient container
@@ -32,8 +32,8 @@ const ActivityCardList = ({ activities }) => {
                             <View style={item.isPaused ? { height: 30, width: 30, backgroundColor: colorSet.timeTracker.softPurple, borderRadius: 9999, ...centercenter, zIndex: 10, position: 'absolute', top: 20, right: 20 } : { height: 30, width: 30, backgroundColor: colorSet.timeTracker.softGray, borderRadius: 9999, ...centercenter, zIndex: 10, position: 'absolute', top: 20, right: 20 }}>
                                 {item.isPaused ? <FontAwesome name="square" size={16} color="black" /> : <FontAwesome5 name="play" size={14} color={colorSet.timeTracker.softViolet} />}
                             </View>
-                            <View style={styles.columnActivityCard}>
-                                <Text style={{ color: colorSet.timeTracker.white, ...fontSet.timeTracker.h3Bold }}>{item.name}</Text>
+                            <View style={{ ...styles.columnActivityCard, flex: 1, justifyContent: 'space-between' }}>
+                                <Text style={{ color: colorSet.timeTracker.white, ...fontSet.timeTracker.h5Bold }}>{item.name}</Text>
                                 <View style={{ flexDirection: 'row', gap: 5, ...itemsCenter }}>
                                     <FontAwesome6 name="calendar" size={12} color={colorSet.timeTracker.white} />
                                     <Text style={{ color: colorSet.timeTracker.white, ...fontSet.timeTracker.small }}>{convertIsoDateTimeToAppTime(item.timestamps[0].timestamp)}</Text>

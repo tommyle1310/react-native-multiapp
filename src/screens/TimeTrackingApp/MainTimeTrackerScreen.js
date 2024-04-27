@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native'
 import { getActivities } from '../../store/features/TimeTracker/activitySlice';
+import useGetActivities from '../../hooks/TimeTracker/useGetActivities';
 
 
 const { colorSet, fontSet, backgroundBlackWidget, margin, padding, justifyCenter, background, justifyBetween, justifyAround, itemsCenter, centercenter, avatar, rounded } = CSS;
@@ -18,37 +19,8 @@ const { colorSet, fontSet, backgroundBlackWidget, margin, padding, justifyCenter
 const MainTimeTrackingScreen = () => {
     const navigation = useNavigation()
     const [selectTabIndex, setSelectTabIndex] = useState(0)
-    const dispatch = useDispatch()
-    const activitiesList = useSelector(state => state.activity)
-    const [listActivities, setListActivities] = useState([])
+    const listActivities = useGetActivities()
 
-    useEffect(() => {
-        setListActivities(activitiesList)
-    }, [activitiesList])
-
-    useFocusEffect(
-        React.useCallback(() => {
-            // Define an async function
-            const fetchData = async () => {
-                try {
-                    // Your logic here, it will run when the screen is focused
-                    // Get token from AsyncStorage
-                    await dispatch(getActivities())
-                } catch (error) {
-                    console.error('Error fetching data:', error);
-                }
-            };
-
-            // Call the async function immediately
-            fetchData();
-
-            // Return a cleanup function
-            return () => {
-                // Cleanup logic if needed
-                console.log('Screen is unfocused');
-            };
-        }, [])
-    );
 
     return (
         <View style={background}>

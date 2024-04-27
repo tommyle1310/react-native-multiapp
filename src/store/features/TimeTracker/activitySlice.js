@@ -45,5 +45,16 @@ export const getActivities = () => async (dispatch) => {
 };
 
 
+export const updateActivity = ({ action, activityId }) => async (dispatch) => {
+    try {
+        const response = await axios.put(`/activity`, { action, activityId });
+        console.log('res:', response.data.data);
+        dispatch(getActivities()); // Dispatch getActivities action to update activities after successful update
+    } catch (error) {
+        console.log(error.message);
+        // Handle error
+    }
+};
+
 
 export default activitySlice.reducer;

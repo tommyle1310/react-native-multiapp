@@ -39,3 +39,52 @@ export const convertTimestamp = (timestamp) => {
 export const convertIsoDateTimeToAppTime = (time) => {
     return formattedDate(Math.floor(new Date(time).getTime() / 1000));
 }
+
+
+export const convertTotalTimestampDurationToAppTime = (listTimestamps) => {
+    let sumDifference = 0;
+    let prevTimestamp = null;
+
+    // Convert timestamps to Date objects
+    const dates = listTimestamps.map(ts => new Date(ts));
+
+    // Calculate sum of absolute differences
+    for (const date of dates) {
+        if (prevTimestamp && prevTimestamp.action !== "pause" && date.action !== "pause") {
+            sumDifference += Math.abs(date - prevTimestamp);
+        }
+        prevTimestamp = date;
+    }
+
+    // Convert time difference to a human-readable format
+    const days = Math.floor(sumDifference / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((sumDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((sumDifference % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((sumDifference % (1000 * 60)) / 1000);
+
+    // Format the time difference
+    let formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    if (days > 0) {
+        formattedTime = `${days} day ${formattedTime}`;
+    }
+
+    return formattedTime;
+}
+
+
+export const convertTotalTimestampDurationToAppTimeToTimestamp = (timeDuration) => {
+    // Split the time duration into hours, minutes, and seconds
+    const [hoursStr, minutesStr, secondsStr] = timeDuration.split(':');
+
+    // Parse hours, minutes, and seconds as integers
+    const hours = parseInt(hoursStr);
+    const minutes = parseInt(minutesStr);
+    const seconds = parseInt(secondsStr);
+
+    // Calculate the total number of seconds
+    const totalSeconds = (hours * 3600) + (minutes * 60) + seconds;
+
+    // Format the total number of seconds
+    const formattedTime = totalSeconds.toString();
+    return formattedTime
+}

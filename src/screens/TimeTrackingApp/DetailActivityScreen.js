@@ -5,8 +5,11 @@ import * as CSS from '../../constants/css';
 import { useNavigation } from '@react-navigation/native';
 import { useRoute } from '@react-navigation/native';
 import { convertTimestamp } from '../../utils/formatTimestamp';
+import { useDispatch } from 'react-redux';
+import { updateActivity } from '../../store/features/TimeTracker/activitySlice';
 
 const DetailActivityScreen = ({ }) => {
+    const dispatch = useDispatch()
     const route = useRoute()
     const navigation = useNavigation();
     const [currentTimeTracking, setCurrentTimeTracking] = useState({
@@ -17,38 +20,15 @@ const DetailActivityScreen = ({ }) => {
         minutes: 0,
         seconds: 0
     });
-    const [isPause, setIsPause] = useState(true);
+    const [isPause, setIsPause] = useState(false);
     const intervalRef = useRef(null);
 
-    const { activityDetail } = route.params
+    const { totalDuration } = route.params
+    // console.log('check hreressss,', route.params.activityId);
     useEffect(() => {
-        // Check if activityDetail.timestamps exists before accessing its length
-        if (activityDetail?.timestamps) {
-            const lastIndex = activityDetail.timestamps.length - 1;
-            const lastTimestamp = activityDetail.timestamps[lastIndex];
-
-            const totalResumeTime = convertTimestamp(lastTimestamp.totalResumeMiliSeconds);
-
-            if (lastTimestamp.totalResumeMiliSeconds) {
-                setCurrentTimeTracking(totalResumeTime);
-            } else {
-                setCurrentTimeTracking({
-                    years: 0,
-                    months: 0,
-                    days: 0,
-                    hours: 0,
-                    minutes: 0,
-                    seconds: 0
-                });
-            }
-
-            if (lastTimestamp.isPaused) {
-                setIsPause(true);
-            } else {
-                setIsPause(false);
-            }
-        }
-    }, [activityDetail]);
+        const totalResumeTime = convertTimestamp(totalDuration);
+        setCurrentTimeTracking(totalResumeTime);
+    }, [totalDuration]);
 
 
     useEffect(() => {
@@ -98,10 +78,13 @@ const DetailActivityScreen = ({ }) => {
     }, [currentTimeTracking, isPause]);
 
     const handlePause = () => {
+        dispatch(updateActivity({ activityId: route.params.activityId, action: 'pause' }))
         setIsPause(true); // Set isPause to true to pause the timer
     }
 
     const handleResume = () => {
+        dispatch(updateActivity({ activityId: route.params.activityId, action: 'resume' }))
+
         setIsPause(false); // Set isPause to false to resume the timer
     }
 

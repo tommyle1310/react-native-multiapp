@@ -25,7 +25,10 @@ export const addActivity = ({ name, tags, description }) => async (dispatch) => 
         const currentUserId = await AsyncStorage.getItem('userId')
         // Perform sign-in logic (e.g., API call)
         const response = await axios.post('/activity', { name, tags, description, userId: currentUserId });
-        console.log(response.data);
+        console.log(response.data.errCode);
+        if (response.data.errCode === 0) {
+            navigate('Sidebar')
+        }
 
     } catch (error) {
         console.log(error.message)
@@ -47,6 +50,17 @@ export const getActivities = () => async (dispatch) => {
 export const updateActivity = ({ action, activityId }) => async (dispatch) => {
     try {
         const response = await axios.put(`/activity`, { action, activityId });
+        console.log('res:', response.data.data);
+        dispatch(getActivities()); // Dispatch getActivities action to update activities after successful update
+    } catch (error) {
+        console.log(error.message);
+        // Handle error
+    }
+};
+
+export const updateFinishStatusActivity = ({ isFinished, activityId }) => async (dispatch) => {
+    try {
+        const response = await axios.put(`/activity-finish`, { isFinished, activityId });
         console.log('res:', response.data.data);
         dispatch(getActivities()); // Dispatch getActivities action to update activities after successful update
     } catch (error) {

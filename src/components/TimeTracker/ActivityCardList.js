@@ -1,16 +1,15 @@
 import { View, Text, StyleSheet, Pressable } from 'react-native'
 import React, { useEffect } from 'react'
-import { Ionicons, Entypo, FontAwesome6, MaterialIcons, FontAwesome, FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome6, MaterialIcons, FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import * as CSS from '../../constants/css';
-import { convertIsoDateTimeToAppTime, formattedDate } from '../../utils/formatTimestamp'
+import { } from '../../utils/formatTimestamp'
 import { useNavigation } from '@react-navigation/native';
-
+import { convertDateTimeFormat } from '../../utils/formatTimestamp'
 import { LinearGradient } from 'expo-linear-gradient';
 const { colorSet, fontSet, margin, padding, justifyCenter, justifyBetween, justifyAround, itemsCenter, centercenter, avatar, rounded } = CSS
 
 
 const ActivityCardList = ({ activities }) => {
-
     const navigation = useNavigation();
     return (
         <View style={{ gap: 10 }}>
@@ -25,7 +24,7 @@ const ActivityCardList = ({ activities }) => {
                     >
                         <LinearGradient
                             colors={!item.isPaused ? [colorSet.timeTracker.cyan, colorSet.timeTracker.violet] : [colorSet.timeTracker.dark, colorSet.timeTracker.dark]} // Array of colors for the gradient
-                            start={{ x: 0, y: 0 }} // Start point of the gradient (0, 0) is top left, (1, 1) is bottom right
+                            start={{ x: 0, y: 0 }} // Start point of the gradient (0, 0) is top left, (1, 1) is bottom right 
                             end={{ x: 1, y: 0 }} // End point of the gradient
                             style={{ width: '100%', height: 100, ...rounded.md, flexDirection: 'row', position: 'relative' }} // Style for the gradient container
                         >
@@ -36,7 +35,7 @@ const ActivityCardList = ({ activities }) => {
                                 <Text style={{ color: colorSet.timeTracker.white, ...fontSet.timeTracker.h5Bold }}>{item.name}</Text>
                                 <View style={{ flexDirection: 'row', gap: 5, ...itemsCenter }}>
                                     <FontAwesome6 name="calendar" size={12} color={colorSet.timeTracker.white} />
-                                    <Text style={{ color: colorSet.timeTracker.white, ...fontSet.timeTracker.small }}>{convertIsoDateTimeToAppTime(item.timestamps[0].timestamp)}</Text>
+                                    <Text style={{ color: colorSet.timeTracker.white, ...fontSet.timeTracker.small }}>{convertDateTimeFormat(item.timestamps[0].timestamp)}</Text>
                                 </View>
                             </View>
                             <View style={{ flex: 1, ...styles.columnActivityCard }}>
@@ -46,7 +45,7 @@ const ActivityCardList = ({ activities }) => {
                                 </View>
                                 <View style={{ flexDirection: 'row', gap: 5, ...itemsCenter, flex: 1, alignItems: 'flex-end' }}>
                                     <FontAwesome6 name="calendar" size={12} color={colorSet.timeTracker.white} />
-                                    <Text style={{ color: colorSet.timeTracker.white, ...fontSet.timeTracker.small, }}>{convertIsoDateTimeToAppTime(item.timestamps[item.timestamps.length - 1].timestamp)}</Text>
+                                    <Text style={{ color: colorSet.timeTracker.white, ...fontSet.timeTracker.small, }}>{convertDateTimeFormat(item.timestamps[item.timestamps.length - 1].timestamp)}</Text>
                                 </View>
                             </View>
                         </LinearGradient>

@@ -1,16 +1,11 @@
-import { View, Text, Pressable, StyleSheet } from 'react-native'
+import { View, Text, Pressable, StyleSheet, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import * as CSS from '../../constants/css';
 import { Ionicons, Entypo, FontAwesome6, MaterialIcons, FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import Tab from '../../components/TimeTracker/Tab';
 import ActivityCardList from '../../components/TimeTracker/ActivityCardList';
-import { activitiesHomeScreen } from '../../constants/sampleData/TimeTrackerSample';
 import TasksScreen from './TasksScreen';
 import { useNavigation } from '@react-navigation/native';
-import { useDispatch, useSelector } from 'react-redux';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFocusEffect } from '@react-navigation/native'
-import { getActivities } from '../../store/features/TimeTracker/activitySlice';
 import useGetActivities from '../../hooks/TimeTracker/useGetActivities';
 
 
@@ -35,18 +30,21 @@ const MainTimeTrackingScreen = () => {
                 <Pressable onPress={() => navigation.navigate('StatisticsTimeTracking')} style={{ borderWidth: 1, borderColor: colorSet.timeTracker.white, ...rounded.md, ...padding.sm }}><Ionicons name="stats-chart-outline" size={24} color={colorSet.timeTracker.white} /></Pressable>
             </View>
             <Tab selectTabIndex={selectTabIndex} setSelectTabIndex={setSelectTabIndex} data={[{ title: 'Activity', onTap: () => { } }, { title: 'Task', onTap: () => { } }]} />
-            {
-                selectTabIndex === 0 ?
-                    <>
-                        <Pressable
-                            onPress={() => navigation.navigate('AddNewTimeTracking')}
-                            style={({ pressed }) => [{ ...backgroundBlackWidget, gap: 10, borderWidth: 1, borderColor: colorSet.timeTracker.softGray },
-                            pressed && { backgroundColor: colorSet.timeTracker.softGray }
-                            ]}><Entypo name="plus" size={24} color={colorSet.timeTracker.white} /><Text style={{ color: colorSet.timeTracker.white, ...fontSet.timeTracker.h5Light }}>Add new activity</Text></Pressable>
-                        <ActivityCardList activities={listActivities} />
-                    </>
-                    : <TasksScreen />
-            }
+            <ScrollView>
+
+                {
+                    selectTabIndex === 0 ?
+                        <>
+                            <Pressable
+                                onPress={() => navigation.navigate('AddNewTimeTracking')}
+                                style={({ pressed }) => [{ ...backgroundBlackWidget, gap: 10, borderWidth: 1, borderColor: colorSet.timeTracker.softGray },
+                                pressed && { backgroundColor: colorSet.timeTracker.softGray }
+                                ]}><Entypo name="plus" size={24} color={colorSet.timeTracker.white} /><Text style={{ color: colorSet.timeTracker.white, ...fontSet.timeTracker.h5Light }}>Add new activity</Text></Pressable>
+                            <ActivityCardList activities={listActivities} />
+                        </>
+                        : <TasksScreen />
+                }
+            </ScrollView>
         </View >
     )
 }

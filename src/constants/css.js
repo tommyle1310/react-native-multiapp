@@ -7,7 +7,8 @@ export const colorSet = {
         softGray: '#434462',
         softPurple: '#3c1a9f',
         dark: '#1b232e',
-        white: '#f1f0fb'
+        white: '#f1f0fb',
+        green: '#29bd39'
     },
     auth: {
         background: '#201a30',
@@ -15,6 +16,16 @@ export const colorSet = {
         dark: '#1e2438',
         white: '#ffffff',
         gray: '#817e8b'
+    },
+    calculator: {
+        darkGreen: '#18c874',
+        softGreen: '#c3e4c6',
+        gray: '#bec3d6',
+        softGray: '#4e4e4e',
+        blue: '#153bc8',
+        white: '#fefefe',
+        lightDark: '#424242',
+        black: '#1f1f1f',
     }
 }
 

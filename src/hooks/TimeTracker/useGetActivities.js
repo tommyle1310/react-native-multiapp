@@ -33,7 +33,7 @@ const useGetActivities = () => {
             // Return a cleanup function
             return () => {
                 // Cleanup logic if needed
-                console.log('Screen is unfocused');
+                // console.log('Screen is unfocused');
             };
         }, [])
     );

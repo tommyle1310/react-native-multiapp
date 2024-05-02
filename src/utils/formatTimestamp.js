@@ -1,223 +1,144 @@
+export const convertDateTimeFormat = (dateString) => {
+    // Parse the provided date string
+    var date = new Date(dateString);
 
-export const formattedDate = (timestamp) => {
-    const date = new Date(timestamp * 1000);
+    // Extract date components
+    var day = date.getUTCDate();
+    var month = date.getUTCMonth() + 1; // Months are zero-based, so add 1
+    var year = date.getUTCFullYear();
+    var hours = date.getUTCHours();
+    var minutes = date.getUTCMinutes();
 
-    // Extract the date components
-    const day = date.getDate();
-    const month = date.getMonth() + 1; // Month is zero-based, so add 1
-    const year = date.getFullYear();
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const period = hours >= 12 ? 'PM' : 'AM'; // Determine the period (AM/PM)
-    const formattedHours = hours % 12 || 12; // Convert 0 to 12-hour format
+    // Add leading zeros if necessary
+    day = (day < 10) ? '0' + day : day;
+    month = (month < 10) ? '0' + month : month;
+    hours = (hours < 10) ? '0' + hours : hours;
+    minutes = (minutes < 10) ? '0' + minutes : minutes;
 
-    // Create the formatted date string
-    const formattedDate = `${month}/${day}/${year}- ${formattedHours}:${minutes < 10 ? '0' : ''}${minutes} ${period}`;
-    return formattedDate
-}
+    // Format the date and time
+    var formattedDate = day + '/' + month + '/' + year + '-' + hours + ':' + minutes;
 
-export const convertTimestamp = (timestamp) => {
-    let seconds = timestamp % 60;
-    let minutes = Math.floor((timestamp / 60) % 60);
-    let hours = Math.floor((timestamp / (60 * 60)) % 24);
-    let days = Math.floor(timestamp / (24 * 60 * 60));
-
-    // Approximating years and months
-    let years = Math.floor(days / 365.25);
-    let months = Math.floor((days % 365.25) / 30.4375);
-
-    return {
-        "years": years,
-        "months": months,
-        "days": days,
-        "hours": hours,
-        "minutes": minutes,
-        "seconds": seconds
-    };
-}
-
-export const convertIsoDateTimeToAppTime = (time) => {
-    return formattedDate(Math.floor(new Date(time).getTime() / 1000));
+    return formattedDate;
 }
 
 
-export const convertListTotalTimestampDurationToAppTime = (listTimestamps) => {
-    let sumDifference = 0;
-    let prevTimestamp = null;
+export const calculateTimeTotalResumeTime = (listTimestamps) => {
+    let totalPauseTime = 0;
+    let resumeTime = 0;
 
-    // Convert timestamps to Date objects
-    const dates = listTimestamps.map(ts => new Date(ts));
-
-    // Calculate sum of absolute differences
-    for (const date of dates) {
-        if (prevTimestamp && prevTimestamp.action !== "pause" && date.action !== "pause") {
-            sumDifference += Math.abs(date - prevTimestamp);
-        }
-        prevTimestamp = date;
-    }
-
-    // Convert time difference to a human-readable format
-    const days = Math.floor(sumDifference / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((sumDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((sumDifference % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((sumDifference % (1000 * 60)) / 1000);
-
-    // Format the time difference
-    let formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    if (days > 0) {
-        formattedTime = `${days} day ${formattedTime}`;
-    }
-
-    return formattedTime;
-}
-
-
-export const convertListTotalTimestampDurationToAppTimeToTimestamp = (timeDuration) => {
-    // Split the time duration into hours, minutes, and seconds
-    const [hoursStr, minutesStr, secondsStr] = timeDuration.split(':');
-
-    // Parse hours, minutes, and seconds as integers
-    const hours = parseInt(hoursStr);
-    const minutes = parseInt(minutesStr);
-    const seconds = parseInt(secondsStr);
-
-    // Calculate the total number of seconds
-    const totalSeconds = (hours * 3600) + (minutes * 60) + seconds;
-
-    // Format the total number of seconds
-    const formattedTime = totalSeconds.toString();
-    return formattedTime
-}
-
-
-export const convertTotalResumeTimestamp = (listTimestamps) => {
-    let sumOfDifferences = 0;
-    let lastStartOrResumeTimestamp = null;
-
-    for (const action of listTimestamps) {
-        if (action.action === "start" || action.action === "resume") {
-            lastStartOrResumeTimestamp = new Date(action.timestamp);
-        } else if (action.action === "pause" && lastStartOrResumeTimestamp) {
-            const pauseTimestamp = new Date(action.timestamp);
-            const difference = pauseTimestamp - lastStartOrResumeTimestamp;
-            sumOfDifferences += difference;
+    for (let i = 0; i < listTimestamps.length; i++) {
+        if (listTimestamps[i].action === "start") {
+            resumeTime = new Date(listTimestamps[i].timestamp);
+        } else if (listTimestamps[i].action === "pause") {
+            totalPauseTime += new Date(listTimestamps[i].timestamp) - resumeTime;
+        } else if (listTimestamps[i].action === "resume") {
+            resumeTime = new Date(listTimestamps[i].timestamp);
         }
     }
-    return sumOfDifferences
+
+    return totalPauseTime;
 }
 
+export const convertMilisecondToTimeFormat = (milliseconds) => {
+    // Calculate hours, minutes, and seconds
+    var hours = Math.floor(milliseconds / 3600000); // 1 hour = 3600000 milliseconds
+    var minutes = Math.floor((milliseconds % 3600000) / 60000); // 1 minute = 60000 milliseconds
+    var seconds = Math.floor((milliseconds % 60000) / 1000); // 1 second = 1000 milliseconds
 
-const actions = [
-    { "_id": "662bab3fff161d61625695d0", "action": "start", "timestamp": "2024-04-26T13:25:19.170Z" },
-    { "_id": "662d00a4b7f3e78d75b1a526", "action": "resume", "timestamp": "2024-04-27T13:41:56.457Z" },
-    { "_id": "662d00afb7f3e78d75b1a543", "action": "pause", "timestamp": "2024-04-27T13:42:07.776Z" },
-    { "_id": "662d0115b7f3e78d75b1a594", "action": "resume", "timestamp": "2024-04-27T13:43:49.896Z" },
-    { "_id": "662d058cb7f3e78d75b1f0ce", "action": "pause", "timestamp": "2024-04-27T14:02:52.222Z" },
-    { "_id": "662d063db7f3e78d75b1f1cb", "action": "resume", "timestamp": "2024-04-27T14:05:49.573Z" },
-    { "_id": "662d0655b7f3e78d75b1f21c", "action": "pause", "timestamp": "2024-04-27T14:06:13.785Z" },
-    { "_id": "662d0658b7f3e78d75b1f270", "action": "resume", "timestamp": "2024-04-27T14:06:16.079Z" }
-];
+    // Add leading zeros if necessary
+    hours = (hours < 10) ? '0' + hours : hours;
+    minutes = (minutes < 10) ? '0' + minutes : minutes;
+    seconds = (seconds < 10) ? '0' + seconds : seconds;
 
-
-export const convertTotalTimestampDurationToAppTime = (milliseconds) => {
-    const seconds = Math.floor(milliseconds / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
-
-    const remainingHours = hours % 24;
-    const remainingMinutes = minutes % 60;
-    const remainingSeconds = seconds % 60;
-
-    let formattedTime = '';
-
-    if (days > 0) {
-        formattedTime += `${days}day`;
-    }
-
-    if (remainingHours > 0) {
-        formattedTime += `${remainingHours}:`;
-    }
-
-    if (remainingMinutes > 0) {
-        formattedTime += `${remainingMinutes}:`;
-    }
-
-    if (remainingSeconds > 0) {
-        formattedTime += `${remainingSeconds}`;
-    }
-
-    return formattedTime.trim();
-}
-// console.log("Total sum of differences:", convertTotalTimestampDurationToAppTime(convertTotalResumeTimestamp(actions)));
-
-export const getTotalPauses = listTimestamps => {
-    let pauseCount = 0;
-
-    for (const action of listTimestamps) {
-        if (action.action === "pause") {
-            pauseCount++;
-        }
-    }
-    return pauseCount
+    // Format the time as HH:MM:SS
+    return hours + ':' + minutes + ':' + seconds;
 }
 
+export const convertSeriesTime = listTimestamps => {
+    const differences = [];
+    let totalDifference = 0;
 
-export const getNthPauseAction = (actions, n) => {
-    let pauseCount = 0;
-    for (let i = actions.length - 1; i >= 0; i--) {
-        if (actions[i].action === "pause") {
-            pauseCount++;
-            if (pauseCount === n) {
-                return actions[i];
+    for (let i = 1; i < listTimestamps.length; i++) {
+        const prevTimestamp = new Date(listTimestamps[i - 1].timestamp);
+        const currentTimestamp = new Date(listTimestamps[i].timestamp);
+        const differenceInSeconds = (currentTimestamp - prevTimestamp) / 1000; // Convert milliseconds to seconds
+        differences.push(differenceInSeconds);
+        totalDifference += differenceInSeconds;
+    }
+
+    return differences.map(difference => difference / totalDifference);
+}
+
+export const convertTimestampToTimeOrDate = (listTimestamps, index, actionType, timeType) => {
+    let count = 0;
+    let timestamp;
+
+    for (const item of listTimestamps) {
+        if (item.action === actionType) {
+            count++;
+            if (count === index) {
+                timestamp = item.timestamp;
+                break;
             }
         }
     }
-    return null; // If there are fewer than n pause actions
-}
 
-export const getNthNotPauseAction = (actions, n) => {
-    let pauseCount = 0;
-    for (let i = actions.length - 1; i >= 0; i--) {
-        if (actions[i].action !== "pause") {
-            pauseCount++;
-            if (pauseCount === n) {
-                return actions[i];
-            }
+    if (timestamp) {
+        const date = new Date(timestamp);
+        if (timeType === 'date') {
+            const day = String(date.getUTCDate()).padStart(2, "0");
+            const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+            const year = date.getUTCFullYear();
+            return `${day}/${month}/${year}`;
+        } else {
+            const hours = String(date.getUTCHours()).padStart(2, "0");
+            const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+            return `${hours}:${minutes}`;
         }
+    } else {
+        // If there are less than `index` items with the specified action type, return an empty string or handle as appropriate
+        return '';
     }
-    return null; // If there are fewer than n not pause actions
 }
 
-export const formatTimestampToTime = (timestamp) => {
-    const date = new Date(timestamp);
-    const hours = date.getUTCHours().toString().padStart(2, "0");
-    const minutes = date.getUTCMinutes().toString().padStart(2, "0");
 
-    const formattedTime = `${hours}:${minutes}`;
-    return formattedTime
-}
+// eg.  [13817, 4043, 78215, 4793, 41020] => ['00:00:13', '00:00:04', '21:43:35', '00:00:04', '11:23:40']
+export const convertListMilisecondsToListAppTime = (listMiliseconds) => {
+    return listMiliseconds.map(milliseconds => {
+        // Convert milliseconds to seconds
+        let seconds = Math.floor(milliseconds / 1000);
 
-export const formatTimestampToDate = (timestamp) => {
-    const date = new Date(timestamp);
-    const day = date.getUTCDate().toString().padStart(2, "0");
-    const month = (date.getUTCMonth() + 1).toString().padStart(2, "0"); // Months are zero-indexed, so add 1
-    const year = date.getUTCFullYear();
+        // Calculate days
+        let days = Math.floor(seconds / (3600 * 24));
+        seconds -= days * 3600 * 24;
 
-    const formattedDate = `${day}/${month}/${year}`;
-    return formattedDate
+        // Calculate hours
+        let hours = Math.floor(seconds / 3600);
+        seconds -= hours * 3600;
 
-}
+        // Calculate minutes
+        let minutes = Math.floor(seconds / 60);
+        seconds -= minutes * 60;
 
-export const formatTimestampToDateTime = (timestamp) => {
-    const date = new Date(timestamp);
-    const year = date.getUTCFullYear();
-    const month = (date.getUTCMonth() + 1).toString().padStart(2, "0");
-    const day = date.getUTCDate().toString().padStart(2, "0");
-    const hours = date.getUTCHours().toString().padStart(2, "0");
-    const minutes = date.getUTCMinutes().toString().padStart(2, "0");
+        // Format time string
+        let formattedTime = '';
 
-    const formattedDateTime = `${year}/${month}/${day}-${hours}:${minutes}`;
-    return formattedDateTime// Output: "2024/04/27-14:08"
+        if (days > 0) {
+            formattedTime += `${days}d`;
+        }
 
+        if (hours > 0 || days > 0) {
+            formattedTime += `${hours}h`;
+        }
+
+        if (minutes > 0 || hours > 0 || days > 0) {
+            formattedTime += `${minutes.toString().padStart(2, '0')}:`;
+        } else {
+            formattedTime += '00:';
+        }
+
+        formattedTime += seconds.toString().padStart(2, '0');
+
+        return formattedTime;
+    });
 }

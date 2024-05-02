@@ -4,7 +4,6 @@ import * as CSS from '../../constants/css';
 import { Ionicons, Entypo, FontAwesome6, MaterialIcons, FontAwesome, FontAwesome5, AntDesign } from '@expo/vector-icons';
 import { useDispatch } from 'react-redux';
 import { updateActivity } from '../../store/features/TimeTracker/activitySlice';
-import useGetActivities from '../../hooks/TimeTracker/useGetActivities';
 const { colorSet, fontSet, backgroundBlackWidget, margin, padding, justifyCenter, background, justifyBetween, justifyAround, itemsCenter, centercenter, avatar, rounded } = CSS;
 
 
